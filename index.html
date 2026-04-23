@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>今日一籤</title>
+
+<!-- 分享卡片（OG） -->
+<meta property="og:title" content="今日一籤｜一句話找到你">
+<meta property="og:description" content="抽一段書摘，讓它替你說話。">
+<meta property="og:type" content="website">
+
+<style>
+  body {
+    margin: 0;
+    font-family: "Noto Sans TC", sans-serif;
+    background: radial-gradient(circle at top, #1e1e2f, #0f0f1a);
+    color: #fff;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .card {
+    width: 90%;
+    max-width: 520px;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    transform: translateY(0);
+    transition: 0.3s;
+  }
+
+  h1 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+  }
+
+  #quote {
+    font-size: 18px;
+    line-height: 1.8;
+    min-height: 80px;
+    opacity: 0.9;
+    transition: all 0.5s ease;
+  }
+
+  .shake {
+    animation: shake 0.4s ease;
+  }
+
+  @keyframes shake {
+    0% { transform: translateY(0); }
+    25% { transform: translateY(-6px); }
+    50% { transform: translateY(6px); }
+    75% { transform: translateY(-3px); }
+    100% { transform: translateY(0); }
+  }
+
+  button {
+    margin-top: 25px;
+    padding: 12px 26px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #7f5af0, #2cb67d);
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  button:hover {
+    transform: scale(1.05);
+  }
+
+  .share {
+    margin-top: 12px;
+    font-size: 12px;
+    opacity: 0.7;
+    cursor: pointer;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+  <h1>🌙 今日一籤</h1>
+  <div id="quote">點一下，讓一句話找到你</div>
+
+  <button onclick="drawQuote()">抽一籤</button>
+
+  <div class="share" onclick="shareQuote()">📤 分享這一籤</div>
+</div>
+
+<script>
+const quotes = [
+  "有時候，唯一能走出回憶的方式，就是把回憶變成故事，重新理解那些難以言說的事件對我們的意義。",
+    "有時一生不夠，有時除了有意義的名字，其他都太長。",
+    "誰不曾想像死去自己最愛的人？又有誰敢於承認，這想像底下，其實暗藏了期待？",
+    "人是一種藉由丟棄悲傷就能在明天活下去的生物嗎？",
+    "壞小孩的夢裡沒有天使。他們通常迅速早熟。有時候他們的眼睛異常溫柔。",
+    "人性很自私，我們明知道對不起別人，卻又無可厚非地告訴自己，我只能活一次。",
+    "活人的太陽照不到死者的身上。",
+    "二十歲的人不是石頭，但也不全是皮肉。"
+];
+
+let currentQuote = "";
+
+function drawQuote() {
+  const quoteEl = document.getElementById("quote");
+  const card = document.getElementById("card");
+
+  card.classList.add("shake");
+
+  setTimeout(() => {
+    const i = Math.floor(Math.random() * quotes.length);
+    currentQuote = quotes[i];
+
+    quoteEl.style.opacity = 0;
+
+    setTimeout(() => {
+      quoteEl.innerText = currentQuote;
+      quoteEl.style.opacity = 1;
+    }, 200);
+
+    card.classList.remove("shake");
+  }, 300);
+}
+
+// 分享功能（手機最強）
+function shareQuote() {
+  if (!currentQuote) {
+    alert("先抽一籤再分享 :)");
+    return;
+  }
+
+  const text = `🌙 今日一籤\n\n${currentQuote}\n\n— 我今天抽到的`;
+
+  if (navigator.share) {
+    navigator.share({
+      title: "今日一籤",
+      text: text
+    });
+  } else {
+    navigator.clipboard.writeText(text);
+    alert("已複製，可以貼到 IG / LINE ✨");
+  }
+}
+</script>
+
+</body>
+</html>
