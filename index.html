@@ -2,12 +2,11 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<title>今日一籤</title>
 
-<!-- 分享卡片（OG） -->
-<meta property="og:title" content="今日一籤｜一句話找到你">
-<meta property="og:description" content="抽一段書摘，讓它替你說話。">
-<meta property="og:type" content="website">
+<!-- 📱 手機適配 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>每日書摘</title>
 
 <style>
   body {
@@ -15,140 +14,176 @@
     font-family: "Noto Sans TC", sans-serif;
     background: radial-gradient(circle at top, #1e1e2f, #0f0f1a);
     color: #fff;
-    height: 100vh;
+    min-height: 100vh;
+
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 24px;
   }
 
+  /* 🎴 吊掛區域 */
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* 🌿 吊線 */
+  .rope {
+    width: 2px;
+    height: 40px;
+    background: rgba(255,255,255,0.25);
+  }
+
+  /* 🎴 書籤本體 */
   .card {
-    width: 90%;
-    max-width: 520px;
-    background: rgba(255,255,255,0.06);
+    width: 100%;
+    max-width: 380px;
+    background: rgba(255,255,255,0.08);
     backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 40px;
+    border-radius: 16px;
+    padding: 26px;
     text-align: center;
     box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-    transform: translateY(0);
-    transition: 0.3s;
+
+    transform-origin: top center;
+
+    /* 🌿 平常微微擺動（像吊牌） */
+    animation: swing 4s ease-in-out infinite;
+  }
+
+  @keyframes swing {
+    0%   { transform: rotate(-1.2deg) translateY(0px); }
+    50%  { transform: rotate(1.2deg) translateY(4px); }
+    100% { transform: rotate(-1.2deg) translateY(0px); }
+  }
+
+  /* 🎴 抽籤動畫 */
+  .pull {
+    animation: pull 0.7s ease;
+  }
+
+  @keyframes pull {
+    0%   { transform: translateY(-18px) rotate(-2deg); }
+    50%  { transform: translateY(10px) rotate(2deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
   }
 
   h1 {
-    font-size: 22px;
-    margin-bottom: 20px;
+    font-size: 18px;
+    margin-bottom: 14px;
     letter-spacing: 2px;
   }
 
   #quote {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1.8;
-    min-height: 80px;
-    opacity: 0.9;
-    transition: all 0.5s ease;
+    min-height: 90px;
+    opacity: 0.95;
+    transition: opacity 0.4s ease;
   }
 
-  .shake {
-    animation: shake 0.4s ease;
-  }
-
-  @keyframes shake {
-    0% { transform: translateY(0); }
-    25% { transform: translateY(-6px); }
-    50% { transform: translateY(6px); }
-    75% { transform: translateY(-3px); }
-    100% { transform: translateY(0); }
+  #source {
+    margin-top: 10px;
+    font-size: 13px;
+    opacity: 0.6;
   }
 
   button {
-    margin-top: 25px;
-    padding: 12px 26px;
+    margin-top: 18px;
+    padding: 12px 24px;
     border: none;
     border-radius: 999px;
     background: linear-gradient(135deg, #7f5af0, #2cb67d);
     color: white;
-    font-size: 15px;
+    font-size: 14px;
     cursor: pointer;
-    transition: 0.2s;
   }
 
   button:hover {
     transform: scale(1.05);
-  }
-
-  .share {
-    margin-top: 12px;
-    font-size: 12px;
-    opacity: 0.7;
-    cursor: pointer;
   }
 </style>
 </head>
 
 <body>
 
-<div class="card" id="card">
-  <h1>🌙 今日一籤</h1>
-  <div id="quote">點一下，讓一句話找到你</div>
+<div class="wrapper">
 
-  <button onclick="drawQuote()">抽一籤</button>
+  <div class="rope"></div>
 
-  <div class="share" onclick="shareQuote()">📤 分享這一籤</div>
+  <div class="card" id="card">
+    <h1>🌙 每日書摘</h1>
+
+    <div id="quote">讓一段話找到你</div>
+    <div id="source"></div>
+
+    <button onclick="drawQuote()">抽一籤</button>
+  </div>
+
 </div>
 
 <script>
 const quotes = [
-  "有時候，唯一能走出回憶的方式，就是把回憶變成故事，重新理解那些難以言說的事件對我們的意義。",
-    "有時一生不夠，有時除了有意義的名字，其他都太長。",
-    "誰不曾想像死去自己最愛的人？又有誰敢於承認，這想像底下，其實暗藏了期待？",
-    "人是一種藉由丟棄悲傷就能在明天活下去的生物嗎？",
-    "壞小孩的夢裡沒有天使。他們通常迅速早熟。有時候他們的眼睛異常溫柔。",
-    "人性很自私，我們明知道對不起別人，卻又無可厚非地告訴自己，我只能活一次。",
-    "活人的太陽照不到死者的身上。",
-    "二十歲的人不是石頭，但也不全是皮肉。"
+  {
+    text: "有時候，唯一能走出回憶的方式，就是把回憶變成故事，重新理解那些難以言說的事件對我們的意義。",
+    book: "《為了活下去》"
+  },
+  {
+    text: "人是一種藉由丟棄悲傷就能在明天活下去的生物嗎？",
+    book: "《泅泳夜空的巧克力飛船魚》"
+  },
+  {
+    text: "壞小孩的夢裡沒有天使。他們通常迅速早熟。有時候他們的眼睛異常溫柔。",
+    book: "《感官編織》"
+  },
+  {
+    text: "活人的太陽照不到死者的身上。",
+    book: "《張愛玲小說集》"
+  },
+  {
+    text: "有時一生不夠，有時除了有意義的名字，其他都太長。",
+    book: "《時間畢竟》"
+  },
+  {
+    text: "誰不曾想像死去自己最愛的人？又有誰敢於承認，這想像底下，其實暗藏了期待？",
+    book: "《哀艷是童年》"
+  },
+  {
+    text: "人性很自私，我們明知道對不起別人，卻又無可厚非地告訴自己，我只能活一次。。",
+    book: "《見過愛情的人》"
+  }
 ];
 
-let currentQuote = "";
+let current = null;
 
 function drawQuote() {
-  const quoteEl = document.getElementById("quote");
   const card = document.getElementById("card");
+  const quoteEl = document.getElementById("quote");
+  const sourceEl = document.getElementById("source");
 
-  card.classList.add("shake");
+  // 🎴 重播動畫
+  card.classList.remove("pull");
+  void card.offsetWidth;
+  card.classList.add("pull");
 
   setTimeout(() => {
     const i = Math.floor(Math.random() * quotes.length);
-    currentQuote = quotes[i];
+    current = quotes[i];
 
     quoteEl.style.opacity = 0;
+    sourceEl.style.opacity = 0;
 
     setTimeout(() => {
-      quoteEl.innerText = currentQuote;
+      quoteEl.innerText = current.text;
+      sourceEl.innerText = "— " + current.book;
+
       quoteEl.style.opacity = 1;
+      sourceEl.style.opacity = 0.6;
     }, 200);
 
-    card.classList.remove("shake");
-  }, 300);
-}
-
-// 分享功能（手機最強）
-function shareQuote() {
-  if (!currentQuote) {
-    alert("先抽一籤再分享 :)");
-    return;
-  }
-
-  const text = `🌙 今日一籤\n\n${currentQuote}\n\n— 我今天抽到的`;
-
-  if (navigator.share) {
-    navigator.share({
-      title: "今日一籤",
-      text: text
-    });
-  } else {
-    navigator.clipboard.writeText(text);
-    alert("已複製，可以貼到 IG / LINE ✨");
-  }
+  }, 200);
 }
 </script>
 
